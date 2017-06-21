@@ -4,7 +4,7 @@
   <artifactId>stock-prices</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>stock-prices</name>
+  <name>azure-stock-prices</name>
   <description>Stock Price Service</description>
   
   <build>
