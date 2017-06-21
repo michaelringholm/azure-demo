@@ -1,0 +1,2 @@
+ftp waws-prod-sn1-061.ftp.azurewebsites.windows.net
+stelinno-weather-forecast\stelinno
