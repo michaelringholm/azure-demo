@@ -1,5 +1,6 @@
 package com.stelinno.uddi.controllers;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -24,29 +25,54 @@ public class UDDIController {
   
   private static Gson gson = new Gson();
   
+  @RequestMapping(value="/insert", method=RequestMethod.POST)
+  public void insert(@RequestBody Service service) {
+	  System.out.println("Calling remote insert service in the Cloud...");
+	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/insert");
+	  
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  throw new RuntimeException("Unable to insert service!"); // rawResponse.getStatusLine().toString()
+	  
+	  System.out.println(rawResponse.toString());        
+	  System.out.println("Done.");
+  }
+  
+  @RequestMapping(value="/update", method=RequestMethod.POST)
+  public void update(@RequestBody Service service) {
+	  System.out.println("Calling remote update service in the Cloud...");
+	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/update");
+	  System.out.println(rawResponse.toString());
+	  System.out.println("Done.");
+  }  
+  
+  @Deprecated
   @RequestMapping(value="/upsert", method=RequestMethod.POST)
   public void upsert(@RequestBody Service service) {
-    System.out.println("Calling remote upsert service in the Cloud...");
-    
-    try {
-	    HttpClient httpClient = HttpClientBuilder.create().build();
-	    String json = gson.toJson(service);
-	    
-	    StringEntity requestEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
-	    HttpPost postMethod = new HttpPost("http://service-registry-dot-stelinno-dev.appspot.com/upsert");
-	    postMethod.setEntity(requestEntity);
-	    HttpResponse rawResponse = httpClient.execute(postMethod);
-	    	
-	    System.out.println(rawResponse.toString());
-    } 
-    catch (Exception e) {
-		e.printStackTrace();
-	}
-    
-    System.out.println("Done.");
+	  System.out.println("Calling remote upsert service in the Cloud...");
+	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/upsert");	    	
+	  System.out.println(rawResponse.toString());    
+	  System.out.println("Done.");
   }
 
-  /**
+  private HttpResponse postJson(Service service, String targetUrl) {
+	  HttpResponse rawResponse = null;
+	  try {
+		  HttpClient httpClient = HttpClientBuilder.create().build();
+		  String json = gson.toJson(service);
+		
+		  StringEntity requestEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
+		  HttpPost postMethod = new HttpPost(targetUrl);
+		  postMethod.setEntity(requestEntity);
+		  rawResponse = httpClient.execute(postMethod);
+	  }
+	  catch (Exception e) {
+		  e.printStackTrace();
+	  }
+	  
+	  return rawResponse;
+}
+
+/**
    * <a href="https://cloud.google.com/appengine/docs/flexible/java/how-instances-are-managed#health_checking">
    * App Engine health checking</a> requires responding with 200 to {@code /_ah/health}.
    */
