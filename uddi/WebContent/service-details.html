@@ -12,8 +12,8 @@
 	
 	<script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
-    <script src="/js/stelinno-uddi.js"></script>
-    <script src="/js/register-service.js"></script>
+    <script src="/js/stelinno/uddi-shared.js"></script>
+    <script src="/js/stelinno/uddi-add.js"></script>
 </head>
 <body>
 	<input type="hidden" id="hfAppRoot" value="http://localhost:8080">
@@ -35,6 +35,10 @@
 		<div style="position: absolute; top: 14px; left: 220px; font-size:10pt;">
 			<span id="serviceIdSection" style="color: grey; display: none;">{<span id="serviceId"></span>}</span>
 			<span id="newServiceLabel" style="color: green;">NEW!</span>
+		</div>
+		<img id="stelinnoRobot" src="/images/big-robot.png" alt="Big Robot" style="width: 260px; position: absolute; left: 800px; top: 100px;">
+		<div id="helpText" style="width: 260px; position: absolute; left: 1100px; top: 200px; border: solid 1px #808080; color: #808080; padding: 10px;">
+			Go ahead, search for anything you like, I will help you find it quick.
 		</div>
 		
 		<div class="toolTipInputField">

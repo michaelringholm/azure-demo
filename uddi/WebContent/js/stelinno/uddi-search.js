@@ -69,6 +69,6 @@ function SearchServiceFacade() {
 		$("#stelinnoRobot").effect("slide", 1500);
 		$("#stelinnoRobot").effect("bounce", 1500);
 		$("#helpText").effect("pulsate", 3000);
-		$("#helpText").effect("clip", 1000);
+		$("#helpText").delay(4000).effect("clip", 1000);
 	};
 }
