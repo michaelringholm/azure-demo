@@ -9,6 +9,8 @@ $(function() {
     
     var searchServiceFacade = new SearchServiceFacade();
     $("#btnSearchServices").click(function() { searchServiceFacade.search(); });
+    
+    searchServiceFacade.welcomeAnimation();
 });
 
 function SearchServiceFacade() {
@@ -27,10 +29,12 @@ function SearchServiceFacade() {
 			  dataType: "json",
 			  data: JSON.stringify(keywords),			  
 			  success: function(responseData) {
-				  $("#feedback").css("color", "green");
-				  $("#feedback").html(responseData.message);
+				  //$("#feedback").css("color", "green");
+				  //$("#feedback").html(responseData.message);
 				  
-				  $("#serviceId").text(responseData.data.id);
+				  $("#hitCount").html(responseData.message);
+				  $("#searchResults").html("");
+				  //$("#serviceId").text(responseData.data.id);
 				  for(var serviceIndex=0; serviceIndex < responseData.data.length; serviceIndex++) {
 					  var service = responseData.data[serviceIndex];
 					  console.log(service.name);
@@ -42,8 +46,8 @@ function SearchServiceFacade() {
 					  searchResult.appendTo("#searchResults");
 				  }
 				  
-				  $("#newServiceLabel").hide();
-				  $("#serviceIdSection").show();
+				  //$("#newServiceLabel").hide();
+				  //$("#serviceIdSection").show();
 			  },
 			  error: function(err) {
 				  if(err.responseJSON && err.responseJSON.message && err.responseJSON.message.indexOf("given name already exist")>0) {
@@ -59,5 +63,12 @@ function SearchServiceFacade() {
  
 			  }
 		});
+	};
+	
+	this.welcomeAnimation = function() {
+		$("#stelinnoRobot").effect("slide", 1500);
+		$("#stelinnoRobot").effect("bounce", 1500);
+		$("#helpText").effect("pulsate", 3000);
+		$("#helpText").effect("clip", 1000);
 	};
 }

@@ -1,12 +1,33 @@
 @font-face { font-family: sf-san-francisco; src: url('../fonts/sf-san-francisco-ui-display-regular.otf'); }
+@font-face { font-family: alien-resurrection; src: url('../fonts/alien-resurrection.ttf'); }
 
-* {
+html {
+	height: 100%;
+	width: 100%;
+	margin: 0px 0px 0px 0px;
+	margin-top: 10px;
+	
 	font-family: sf-san-francisco;
-	color: black;
+	color: #ffffff;
 }
 
 body {
-	font-size: 11pt;
+	font-size: 16pt;
+	background-image: url('/images/blue-space-bg.jpg');
+	background-repeat: no-repeat;	
+	background-position: top center;
+	/*background-attachment: fixed;*/
+	
+	/*background-size: cover;*/
+	/*text-align: center;*/
+	width: 1500px;
+	height: 100%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left:auto;
+	margin-right:auto;
+	/*border: solid 4px red;*/
+	/*overflow:hidden;*/
 }
 
 h1 {
@@ -16,7 +37,7 @@ h1 {
 }
 
 h2 {
-	font-size: 10pt;
+	font-size: 15pt;
 	margin: 0px;
 	padding: 0px;
 }
@@ -31,44 +52,59 @@ input {
 	outline: 0;
 	background: transparent;
 	border-bottom: 1px solid black;
-	width: 600px;
 }
 
 button {
 	width: 120px;
 }
 
+#header {
+	position: relative;
+	height: 110px;
+	width: 1500px;
+}
+
 #content {
 	position: relative;
+	margin-left: 24px;
+	margin-top: 30px;
+	width: 1500px;
+	/*border: solid 3px red;*/
+	height: 800px;
+	color: black;
+}
+
+#footer {
+	position: absolute; top: 1030px; text-align: center; width: 1500px;
+}
+
+#footer hr{
+	border-color: #001237;
+}
+
+#footer a {
+	color: #001237;
+	font-family: alien-resurrection;
+	font-size: 14pt;
 }
 
 .toolTipInputField {
 	margin-top: 18px;	
 }
 
-.greenText {
-	color: green;
+.menuItem {
+	color: #4a7db9;
+	text-decoration: none;
 }
 
-#feedback {
-	margin-top: 10px;
-	font-weight: bold;
-	font-size: 16pt;
+.menuItemSelected {
+	color: #ffffff;
+	font-style: bold;
+	text-decoration: none;
 }
 
-.searchResult {
-	margin-top: 28px;
-}
-
-.searchResult .name {
-	color: #1A0DAB;
-	font-size: 15pt;
-}
-.searchResult .endpoint {
-	color: #006621;
-	font-size: 11pt;
-}
-.searchResult .description {
-	color: #545454;
-	font-size: 10pt;
+img.stelinno-logo {
+	margin-top: 24px; 
+	margin-left: 0px;
+	width: 80px;
 }

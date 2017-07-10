@@ -1,0 +1,80 @@
+@font-face { font-family: sf-san-francisco; src: url('../fonts/sf-san-francisco-ui-display-regular.otf'); }
+
+body {	
+	background-image: url('/images/blue-space-bg-low.jpg');
+}
+
+h1 {
+	font-size: 23pt;
+	margin: 0px;
+	padding: 0px;
+}
+
+h2 {
+	font-size: 10pt;
+	margin: 0px;
+	padding: 0px;
+}
+
+label {
+	font-size: 9pt;
+}
+
+input {
+	font-size: 14pt;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	border-bottom: 1px solid black;
+	width: 600px;
+}
+
+button {
+	width: 120px;
+}
+
+#content {
+	position: relative;
+	font-family: sf-san-francisco;
+	color: black;
+	font-size: 11pt;
+}
+
+#templates {
+	display: none;
+}
+
+.toolTipInputField {
+	margin-top: 18px;	
+}
+
+.greenText {
+	color: green;
+}
+
+#feedback {
+	margin-top: 10px;
+	font-weight: bold;
+	font-size: 16pt;
+}
+
+#hitCount {
+	color: #808080;	
+}
+
+.searchResult {
+	margin-top: 28px;
+}
+
+.searchResult .name {
+	color: #1A0DAB;
+	font-size: 15pt;
+}
+.searchResult .endpoint {
+	color: #006621;
+	font-size: 11pt;
+}
+.searchResult .description {
+	color: #545454;
+	font-size: 10pt;
+}
