@@ -38,10 +38,37 @@ button {
 	width: 120px;
 }
 
+#content {
+	position: relative;
+}
+
 .toolTipInputField {
 	margin-top: 18px;	
 }
 
 .greenText {
 	color: green;
+}
+
+#feedback {
+	margin-top: 10px;
+	font-weight: bold;
+	font-size: 16pt;
+}
+
+.searchResult {
+	margin-top: 28px;
+}
+
+.searchResult .name {
+	color: #1A0DAB;
+	font-size: 15pt;
+}
+.searchResult .endpoint {
+	color: #006621;
+	font-size: 11pt;
+}
+.searchResult .description {
+	color: #545454;
+	font-size: 10pt;
 }

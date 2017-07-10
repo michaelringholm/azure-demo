@@ -1,12 +1,10 @@
 package com.stelinno.uddi.controllers;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.stelinno.uddi.entities.Service;
+import com.stelinno.uddi.json.HttpHelper;
 
 @RestController
 @RequestMapping("/service")
@@ -23,54 +22,81 @@ public class UDDIController {
     return "Welcome to the UDDI";
   }
   
-  private static Gson gson = new Gson();
+  @Autowired private Gson gson;
+  @Autowired private HttpHeaders jsonHttpHeaders;
+  @Autowired private String baseUDDIServiceUrl;
+  @Autowired private HttpHelper jsonHelper;
   
   @RequestMapping(value="/insert", method=RequestMethod.POST)
-  public void insert(@RequestBody Service service) {
+  private ResponseEntity<String> insert(@RequestBody Service service) throws Exception {
 	  System.out.println("Calling remote insert service in the Cloud...");
-	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/insert");
+	  HttpResponse rawResponse = jsonHelper.post(service, baseUDDIServiceUrl + "/insert.ctl");	  	  
 	  
+	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
-		  throw new RuntimeException("Unable to insert service!"); // rawResponse.getStatusLine().toString()
-	  
-	  System.out.println(rawResponse.toString());        
+		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  	  
+	  System.out.println(jsonResponse);
 	  System.out.println("Done.");
+
+	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
   }
   
   @RequestMapping(value="/update", method=RequestMethod.POST)
-  public void update(@RequestBody Service service) {
+  private ResponseEntity<String> update(@RequestBody Service service) {
 	  System.out.println("Calling remote update service in the Cloud...");
-	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/update");
-	  System.out.println(rawResponse.toString());
+	  HttpResponse rawResponse = jsonHelper.post(service, baseUDDIServiceUrl + "/update.ctl");
+	  
+	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  
+	  System.out.println(jsonResponse);
 	  System.out.println("Done.");
+	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
   }  
   
-  @Deprecated
   @RequestMapping(value="/upsert", method=RequestMethod.POST)
-  public void upsert(@RequestBody Service service) {
-	  System.out.println("Calling remote upsert service in the Cloud...");
-	  HttpResponse rawResponse = postJson(service, "https://service-registry-dot-stelinno-prod.appspot.com/upsert");	    	
-	  System.out.println(rawResponse.toString());    
-	  System.out.println("Done.");
+  public ResponseEntity<String> upsert(@RequestBody Service service) throws Exception {
+	  if(service != null && service.id != 0)
+		  return update(service);
+	  else
+		  return insert(service);
   }
-
-  private HttpResponse postJson(Service service, String targetUrl) {
-	  HttpResponse rawResponse = null;
-	  try {
-		  HttpClient httpClient = HttpClientBuilder.create().build();
-		  String json = gson.toJson(service);
-		
-		  StringEntity requestEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
-		  HttpPost postMethod = new HttpPost(targetUrl);
-		  postMethod.setEntity(requestEntity);
-		  rawResponse = httpClient.execute(postMethod);
-	  }
-	  catch (Exception e) {
-		  e.printStackTrace();
-	  }
+  
+  /***
+   * curl -H "Accept: text/html" -H "Content-type: text/html" -X POST -d "parcel" http://localhost:8080/service/search.ctl
+   * @param service
+   * @return
+   */
+  @RequestMapping(value="/search", method=RequestMethod.POST)
+  public ResponseEntity<String> search(@RequestBody String keywords) {
+	  System.out.println("Calling remote find service in the Cloud...");
+	  HttpResponse rawResponse = jsonHelper.get(keywords.toString(), baseUDDIServiceUrl + "/search.ctl");
 	  
-	  return rawResponse;
-}
+	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  
+	  System.out.println(jsonResponse);
+	  System.out.println("Done.");
+	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
+  }
+  
+  /*@RequestMapping(value="/findByName", method=RequestMethod.GET)
+  private ResponseEntity<String> findByName(String serviceName) {
+	  System.out.println("Calling remote find service in the Cloud...");
+	  HttpResponse rawResponse = jsonHelper.postJson(service, baseUDDIServiceUrl + "/find2.ctl");
+	  
+	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  
+	  System.out.println(jsonResponse);
+	  System.out.println("Done.");
+	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
+  }*/
+  
 
 /**
    * <a href="https://cloud.google.com/appengine/docs/flexible/java/how-instances-are-managed#health_checking">
@@ -81,5 +107,4 @@ public class UDDIController {
     // Message body required though ignored
     return "Still surviving.";
   }
-
 }

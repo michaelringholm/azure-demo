@@ -14,7 +14,7 @@ $(function() {
     $( "#serviceType" ).autocomplete({ source: serviceTypes, minLength: 0 });
     
     var serviceFacade = new ServiceFacade();
-    $("#btnRegisterNewService").click(function() { serviceFacade.insertService(); });
+    $("#btnRegisterNewService").click(function() { serviceFacade.upsertService(); });
 });
 
 function ServiceFacade() {
@@ -22,8 +22,10 @@ function ServiceFacade() {
 	var _this = this;
 	_this.appRoot = appConfig.getBaseUrl();//$("#hfAppRoot").val();
 	
-	this.insertService = function() {
+	this.upsertService = function() {
 		var service = {};
+		if($("#serviceId").html().length > 0)
+			service.id = $("#serviceId").html();
 		service.name = $("#serviceName").val();
 		service.description = $("#description").val();
 		service.domain = $("#domain").val();
@@ -34,15 +36,26 @@ function ServiceFacade() {
 		
 		$.ajax({
 			  type: "POST",
-			  url: _this.appRoot + "/service/insert.ctl",
+			  url: _this.appRoot + "/service/upsert.ctl",
 			  contentType: "application/json",
 			  dataType: "json",
 			  data: JSON.stringify(service),			  
-			  success: function(data) { 
- 
+			  success: function(responseData) {
+				  $("#feedback").css("color", "green");
+				  $("#feedback").html(responseData.message);
+				  $("#serviceId").text(responseData.data.id);
+				  $("#newServiceLabel").hide();
+				  $("#serviceIdSection").show();
 			  },
-			  error: function(err, err2) {
-
+			  error: function(err) {
+				  if(err.responseJSON && err.responseJSON.message && err.responseJSON.message.indexOf("given name already exist")>0) {
+					  $("#feedback").css("color", "red");
+					  $("#feedback").html("Service name already in use!");
+				  }
+				  else {
+					  $("#feedback").css("color", "red");
+					  $("#feedback").html("An error occured, service was not registered!");
+				  }
 			  },			  
 			  complete: function() { 
  
@@ -50,7 +63,7 @@ function ServiceFacade() {
 		});
 	};
 	
-	this.updateService = function() {
+	/*this.updateService = function() {
 		var service = {};
 		service.name = $("#serviceName").val();
 		service.description = $("#description").val();
@@ -76,6 +89,6 @@ function ServiceFacade() {
  
 			  }
 		});
-	};	
+	};*/
 
 }

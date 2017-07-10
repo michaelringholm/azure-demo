@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Search Services</title>
+	
+	<link href="/css/jquery-ui.min.css" rel="stylesheet">
+	<link href="/css/jquery-ui.theme.min.css" rel="stylesheet">
+	<link href="/css/jquery-ui.structure.min.css" rel="stylesheet">
+	<link href="/css/stelinno.css" rel="stylesheet">
+	
+	<script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/stelinno.js"></script>
+    <script src="/js/search-service.js"></script>
+</head>
+<body>
+	<input type="hidden" id="hfAppRoot" value="http://localhost:8080">
+	
+	<div id="content">
+		<h1>Search Services</h1>
+		
+		<div class="toolTipInputField">
+			<label for="keywords">Keywords:</label><br>
+			<input id="keywords" title="Please enter the keywords to search for" value="parcel">		
+		</div>
+		
+		<div style="margin-top: 20px;">
+			<button id="btnSearchServices" class="ui-button ui-widget ui-corner-all">
+		    	<span class="ui-icon ui-icon-check"></span> Search
+		  	</button>  	
+	  	</div>
+	  	
+	  	<div id="hitCount"></div>
+	  	<div id="searchResults"></div>
+	  	
+		<div id="feedback"></div>
+		
+		<!-- Templates -->
+		<div id="templates">
+			<div id="searchResultTemplate" class="searchResult">
+				<div class="name">Name</div>
+				<div class="endpoint">Endpoint</div>
+				<div class="description">Description</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
