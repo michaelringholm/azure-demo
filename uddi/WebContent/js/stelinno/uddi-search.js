@@ -10,6 +10,12 @@ $(function() {
     var searchServiceFacade = new SearchServiceFacade();
     $("#btnSearchServices").click(function() { searchServiceFacade.search(); });
     
+    $(document).keypress(function(e) {
+        if(e.which == 13) {
+        	searchServiceFacade.search();
+        }
+    });
+    
     searchServiceFacade.welcomeAnimation();
 });
 
@@ -41,6 +47,7 @@ function SearchServiceFacade() {
 					  var searchResult = $("#searchResultTemplate").clone();
 					  searchResult.attr("id", service.id);
 					  searchResult.find(".name").html(service.name);
+					  searchResult.find(".name").attr("href", "/service-details.html?serviceId=" + service.id);
 					  searchResult.find(".endpoint").html(service.endpoint);
 					  searchResult.find(".description").html(service.description);
 					  searchResult.appendTo("#searchResults");

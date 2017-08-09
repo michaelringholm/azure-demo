@@ -1,7 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta charset="UTF-8">
 	<title>Register Service</title>
 	
 	<link href="/css/jquery-ui.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
 	<script src="/js/jquery-3.1.1.min.js"></script>
     <script src="/js/jquery-ui.min.js"></script>
     <script src="/js/stelinno/uddi-shared.js"></script>
-    <script src="/js/stelinno/uddi-add.js"></script>
+    <script src="/js/stelinno/uddi-details.js"></script>
 </head>
 <body>
 	<input type="hidden" id="hfAppRoot" value="http://localhost:8080">
@@ -32,74 +32,98 @@
 	</div>	
 	<div id="content">
 		<h1>Register Service</h1>
-		<div style="position: absolute; top: 14px; left: 220px; font-size:10pt;">
+		<div style="position: absolute; top: 14px; left: 220px; font-size:10pt; border: solid 2px;">
 			<span id="serviceIdSection" style="color: grey; display: none;">{<span id="serviceId"></span>}</span>
 			<span id="newServiceLabel" style="color: green;">NEW!</span>
 		</div>
-		<img id="stelinnoRobot" src="/images/big-robot.png" alt="Big Robot" style="width: 260px; position: absolute; left: 800px; top: 100px;">
-		<div id="helpText" style="width: 260px; position: absolute; left: 1100px; top: 200px; border: solid 1px #808080; color: #808080; padding: 10px;">
-			Go ahead, search for anything you like, I will help you find it quick.
+		
+		<div id="assistant" style="display: none;">
+			<img id="stelinnoRobot" src="/images/big-robot.png" alt="Big Robot" style="width: 260px; position: absolute; left: 800px; top: 100px;">
+			<div id="helpText" style="width: 260px; position: absolute; left: 1100px; top: 200px; border: solid 1px #808080; color: #808080; padding: 10px;">
+				Go ahead, search for anything you like, I will help you find it quick.
+			</div>
 		</div>
 		
-		<div class="toolTipInputField">
-			<label for="serviceName">Service Name:</label><br>
-			<input id="serviceName" title="Please enter the logical name of your service" value="Parcel Tracking Service">		
-		</div>
-		
-		<div class="toolTipInputField">
-			<label for="serviceEndpoint">Service Endpoint:</label><br>
-			<input id="serviceEndpoint" title="Please enter the URL for the service endpoint" value="https://parcel-tracking-dot-stelinno-dev.appspot.com/track">
-		</div>
-		
-		<div class="toolTipInputField">
-			<label for="protocol">Protocol: </label><br>
-	  		<input id="protocol" value="HTTP">
-	  	</div>
-	  
-		<div class="toolTipInputField">
-			<label for="serviceType">Service Type: </label><br>
-	  		<input id="serviceType">
-	  	</div>  
+		<div style="display: inline-block; vertical-align:top;" id="leftContent">
+			<div class="toolTipInputField">
+				<label for="serviceName">Service Name:</label><br>
+				<input id="serviceName" title="Please enter the logical name of your service" placeholder="Parcel Tracking Service">		
+			</div>
 			
-		<div class="toolTipInputField">
-			<label for="description">Description:</label><br>
-			<input id="description" title="Please describe your service" value="Parcel Tracking ...">
+			<div class="toolTipInputField">
+				<label for="serviceEndpoint">Service Endpoint:</label><br>
+				<input id="serviceEndpoint" title="Please enter the URL for the service endpoint" placeholder="https://parcel-tracking-dot-stelinno-dev.appspot.com/track">
+			</div>
+			
+			<div class="toolTipInputField">
+				<label for="protocol">Protocol: </label><br>
+		  		<input id="protocol" placeholder="HTTP">
+		  	</div>
+		  	
+			<div class="toolTipInputField">
+				<label for="method">Method: </label><br>
+		  		<input id="method" placeholder="GET">
+		  	</div>	  	
+		  
+			<div class="toolTipInputField">
+				<label for="serviceType">Service Type: </label><br>
+		  		<input id="serviceType" placeholder="Free">
+		  	</div>  
+				
+			<div class="toolTipInputField">
+				<label for="description">Description:</label><br>
+				<input id="description" title="Please describe your service" placeholder="Parcel Tracking ...">
+			</div>
+			
+			<div class="toolTipInputField">
+				<label for="domain">Domain:</label><br>
+				<input id="domain" title="Please enter the logical domain where your service belongs to" placeholder="Shipping">
+			</div>
+			
+			<div class="toolTipInputField">
+				<label for="subDomain">Sub Domain:</label><br>
+				<input id="subDomain" title="Please enter the logical sub domain where your service belongs to" placeholder="Parcels">
+			</div>
+			
+			<div class="toolTipInputField">
+				<label for="supportEmail">Support Email:</label><br>
+				<input id="supportEmail" title="Please enter support email address for your service" placeholder="support@stelinno.com">
+			</div>
+			
+			<div class="toolTipInputField">
+				<label for="supportChat">Support Chat:</label><br>
+				<input id="supportChat" title="Please enter the support chat tag for your service" placeholder="@StelinnoDK">
+			</div>
+			
+			<div style="margin-top: 20px;">
+				<button id="btnRegisterNewService" class="ui-button ui-widget ui-corner-all">
+			    	<span class="ui-icon ui-icon-check"></span> Confirm
+			  	</button>  	
+			  	<button class="ui-button ui-widget ui-corner-all">
+			    	<span class="ui-icon ui-icon-person"></span> Roles
+			  	</button>  	
+			  	<button class="ui-button ui-widget ui-corner-all">
+			    	<span class="ui-icon ui-icon-cancel"></span> Cancel
+			  	</button>  	
+			 	<button id="btnTestService" class="ui-button ui-widget ui-corner-all">
+			    	<span class="ui-icon ui-icon-play"></span> Test
+			  	</button>
+		  	</div>
+	  	</div>		
+		
+		<div style="display: inline-block;  vertical-align:top; margin-left: 60px; margin-top: 18px;" id="rightContent">
+			<label>Payload:</label>
+			<div style="display:inline-block; color: green; font-weight: bold; margin-left: 100px; border: solid 2px green; cursor: pointer;">+</div>
+			<div class="payloadParam">
+				<input style="display:inline-block; width: 120px;" type="text" placeholder="Param Name">
+				<input style="display:inline-block; width: 120px; margin-left: 20px;" type="text" placeholder="Param Value">
+			</div>
+			<div style="margin-top: 20px;">
+				<label>Output:</label>
+				<div><textarea id="testOutput" rows="6" cols="70"></textarea></div>
+			</div>
 		</div>
 		
-		<div class="toolTipInputField">
-			<label for="domain">Domain:</label><br>
-			<input id="domain" title="Please enter the logical domain where your service belongs to" value="Shipping">
-		</div>
-		
-		<div class="toolTipInputField">
-			<label for="subDomain">Sub Domain:</label><br>
-			<input id="subDomain" title="Please enter the logical sub domain where your service belongs to" value="Parcels">
-		</div>
-		
-		<div class="toolTipInputField">
-			<label for="supportEmail">Support Email:</label><br>
-			<input id="supportEmail" title="Please enter support email address for your service" value="support@stelinno.com">
-		</div>
-		
-		<div class="toolTipInputField">
-			<label for="supportChat">Support Chat:</label><br>
-			<input id="supportChat" title="Please enter the support chat tag for your service" value="@StelinnoDK">
-		</div>
-		
-		<div style="margin-top: 20px;">
-			<button id="btnRegisterNewService" class="ui-button ui-widget ui-corner-all">
-		    	<span class="ui-icon ui-icon-check"></span> Confirm
-		  	</button>  	
-		  	<button class="ui-button ui-widget ui-corner-all">
-		    	<span class="ui-icon ui-icon-person"></span> Roles
-		  	</button>  	
-		  	<button class="ui-button ui-widget ui-corner-all">
-		    	<span class="ui-icon ui-icon-cancel"></span> Cancel
-		  	</button>  	
-		 	<button class="ui-button ui-widget ui-corner-all">
-		    	<span class="ui-icon ui-icon-play"></span> Test
-		  	</button>
-	  	</div>
 		<div id="feedback"></div>
 	</div>
 </body>

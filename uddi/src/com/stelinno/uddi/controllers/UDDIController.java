@@ -25,14 +25,14 @@ public class UDDIController {
   @Autowired private Gson gson;
   @Autowired private HttpHeaders jsonHttpHeaders;
   @Autowired private String baseUDDIServiceUrl;
-  @Autowired private HttpHelper jsonHelper;
+  @Autowired private HttpHelper httpHelper;
   
   @RequestMapping(value="/insert", method=RequestMethod.POST)
   private ResponseEntity<String> insert(@RequestBody Service service) throws Exception {
 	  System.out.println("Calling remote insert service in the Cloud...");
-	  HttpResponse rawResponse = jsonHelper.post(service, baseUDDIServiceUrl + "/insert.ctl");	  	  
+	  HttpResponse rawResponse = httpHelper.post(service, baseUDDIServiceUrl + "/insert.ctl");	  	  
 	  
-	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
 		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
 	  	  
@@ -45,9 +45,9 @@ public class UDDIController {
   @RequestMapping(value="/update", method=RequestMethod.POST)
   private ResponseEntity<String> update(@RequestBody Service service) {
 	  System.out.println("Calling remote update service in the Cloud...");
-	  HttpResponse rawResponse = jsonHelper.post(service, baseUDDIServiceUrl + "/update.ctl");
+	  HttpResponse rawResponse = httpHelper.post(service, baseUDDIServiceUrl + "/update.ctl");
 	  
-	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
 		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
 	  
@@ -65,16 +65,16 @@ public class UDDIController {
   }
   
   /***
-   * curl -H "Accept: text/html" -H "Content-type: text/html" -X POST -d "parcel" http://localhost:8080/service/search.ctl
+   * curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d "parcel" http://localhost:8080/service/search.ctl
    * @param service
    * @return
    */
   @RequestMapping(value="/search", method=RequestMethod.POST)
   public ResponseEntity<String> search(@RequestBody String keywords) {
 	  System.out.println("Calling remote find service in the Cloud...");
-	  HttpResponse rawResponse = jsonHelper.get(keywords.toString(), baseUDDIServiceUrl + "/search.ctl");
+	  HttpResponse rawResponse = httpHelper.get("serviceName", keywords.toString(), baseUDDIServiceUrl + "/search.ctl");
 	  
-	  CustomResponse jsonResponse = jsonHelper.getJsonResponse(rawResponse);
+	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
 		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
 	  
@@ -82,6 +82,41 @@ public class UDDIController {
 	  System.out.println("Done.");
 	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
   }
+  
+  /***
+   * curl -H "Accept: application/json" -H "Content-type: application/json" -X POST -d {"id":"5712536552865792"} http://localhost:8080/service/searchById.ctl
+   * @param service
+   * @return
+   */
+  @RequestMapping(value="/searchById", method=RequestMethod.POST)
+  public ResponseEntity<String> searchById(@RequestBody Service service) {
+	  System.out.println("Calling remote find service in the Cloud...");
+	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
+	  HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(service.id), baseUDDIServiceUrl + "/searchById.ctl");
+	  
+	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  
+	  System.out.println(jsonResponse);
+	  System.out.println("Done.");
+	  return new ResponseEntity<String>(gson.toJson(jsonResponse), jsonHttpHeaders, HttpStatus.OK);
+  }
+  
+  @RequestMapping(value="/test", method=RequestMethod.POST)
+  public ResponseEntity<String> test(@RequestBody Service service) {
+	  System.out.println("Calling remote endpoint in the Cloud...");
+	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
+	  HttpResponse rawResponse = httpHelper.get("licensePlateNo", "bj68632", service.endpoint);
+	  
+	  String responsePayload = httpHelper.getResponsePayload(rawResponse);
+	  if(rawResponse.getStatusLine().getStatusCode() != 200)
+		  return new ResponseEntity<String>(null, jsonHttpHeaders, HttpStatus.valueOf(rawResponse.getStatusLine().getStatusCode()));
+	  
+	  System.out.println(responsePayload);
+	  System.out.println("Done.");
+	  return new ResponseEntity<String>(gson.toJson(responsePayload), jsonHttpHeaders, HttpStatus.OK);
+  } 
   
   /*@RequestMapping(value="/findByName", method=RequestMethod.GET)
   private ResponseEntity<String> findByName(String serviceName) {

@@ -27,7 +27,7 @@ public class AppConfig {
 		return new Gson();
 	}
 	
-	@Bean HttpHelper jsonHelper() {
+	@Bean HttpHelper httpHelper() {
 		return new HttpHelper();
 	}
 }

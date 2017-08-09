@@ -39,7 +39,7 @@ public class HttpHelper {
 		return rawResponse;
 	}
 	
-	public HttpResponse get(String serviceName, String targetUrl) {
+	public HttpResponse get(String parmName, String parmValue, String targetUrl) {
 		HttpResponse rawResponse = null;
 		HttpClient httpClient = null;
 		try {
@@ -48,7 +48,7 @@ public class HttpHelper {
 			HttpGet getMethod = new HttpGet(targetUrl);*/
 			
 			URIBuilder builder = new URIBuilder(targetUrl);
-			builder.setParameter("serviceName", serviceName);
+			builder.setParameter(parmName, parmValue);
 			URI uri = builder.build();
 			HttpGet httpGet = new HttpGet(uri);
 			
@@ -61,7 +61,7 @@ public class HttpHelper {
 		return rawResponse;
 	}	
 
-	public CustomResponse getJsonResponse(HttpResponse httpResponse) {
+	public CustomResponse getCustomResponse(HttpResponse httpResponse) {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader((httpResponse.getEntity().getContent())));
 			String output;
@@ -75,4 +75,19 @@ public class HttpHelper {
 			throw new RuntimeException("Unable to get response from server!");
 		}
 	}
+	
+	public String getResponsePayload(HttpResponse httpResponse) {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader((httpResponse.getEntity().getContent())));
+			String output = br.readLine();
+			
+			if(output == null)
+				throw new RuntimeException("Empty response from server!");
+			else
+				return output;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Unable to get response from server!");
+		}
+	}	
 }
