@@ -19,6 +19,7 @@ $(function() {
     var serviceFacade = new ServiceFacade();
     $("#btnRegisterNewService").click(function() { serviceFacade.upsertService(); });
     $("#btnTestService").click(function() { serviceFacade.testService(); });
+    $(".addPayloadParameter").click(function() {serviceFacade.addPayloadParameter();});
     
     $(document).keypress(function(e) {
         if(e.which == 13) {
@@ -40,6 +41,20 @@ function ServiceFacade() {
 	var _this = this;
 	_this.appRoot = appConfig.getBaseUrl();//$("#hfAppRoot").val();
 	
+	var buildPayload = function(payload) {
+		$(".payloadParameter").each( function() {
+			var paramName = $(this).find(".paramName").val();
+			var paramValue = $(this).find(".paramValue").val();
+			
+			if(paramName && paramValue) {
+				var param = {};
+				param.paramName = paramName;
+				param.paramValue = paramValue;
+				payload.parameters.push(param);
+			}
+		});
+	};
+	
 	this.upsertService = function() {
 		var service = {};
 		if($("#serviceId").html().length > 0)
@@ -51,6 +66,12 @@ function ServiceFacade() {
 		service.endpoint = $("#serviceEndpoint").val();
 		service.supportEmail = $("#supportEmail").val();
 		service.supportChat = $("#supportChat").val();
+		service.method = $("#method").val();
+		service.protocol = $("#protocol").val();
+		
+		service.payload = {};
+		service.payload.parameters = [];		
+		buildPayload(service.payload);
 		
 		$.ajax({
 			  type: "POST",
@@ -103,6 +124,23 @@ function ServiceFacade() {
 				  $("#description").val(responseData.data.description);
 				  $("#supportEmail").val(responseData.data.supportEmail);
 				  $("#supportChat").val(responseData.data.supportChat);
+				  $("#method").val(responseData.data.method);
+				  $("#protocol").val(responseData.data.protocol);
+				  
+				  if(responseData.data.payload && responseData.data.payload.parameters) {
+					  
+					  var missingParamPlaceholders = responseData.data.payload.parameters.length - $(".payloadParameter").length;
+					  for(var i=0; i<missingParamPlaceholders; i++)
+						  _this.addPayloadParameter();
+					  
+					  var index = 0;
+					  while(index < responseData.data.payload.parameters.length) {
+						  // change first to nth
+						  $(".payloadParameter:eq(" + index + ")").find(".paramName").val(responseData.data.payload.parameters[index].paramName);
+						  $(".payloadParameter:eq(" + index + ")").find(".paramValue").val(responseData.data.payload.parameters[index].paramValue);
+						  index++;
+					  }
+				  }
 				  
 				  $("#newServiceLabel").hide();
 				  $("#serviceIdSection").show();
@@ -124,15 +162,22 @@ function ServiceFacade() {
 	};
 	
 	this.testService = function() {
+		var serviceModel = {};
 		var service = {};
 		service.endpoint = $("#serviceEndpoint").val();
+		service.method = $("#method").val();
+		serviceModel.service = service;
+				
+		service.payload = {};
+		service.payload.parameters = [];		
+		buildPayload(service.payload);
 		
 		$.ajax({
 			  type: "POST",
 			  url: _this.appRoot + "/service/test.ctl",
 			  contentType: "application/json",
 			  dataType: "json",
-			  data: JSON.stringify(service),			  
+			  data: JSON.stringify(serviceModel),
 			  success: function(responseData) {
 				  $("#feedback").css("color", "green");
 				  $("#feedback").html(responseData.message);
@@ -156,32 +201,10 @@ function ServiceFacade() {
 		});
 	};	
 	
-	/*this.updateService = function() {
-		var service = {};
-		service.name = $("#serviceName").val();
-		service.description = $("#description").val();
-		service.domain = $("#domain").val();
-		service.subDomain = $("#subDomain").val();
-		service.endpoint = $("#serviceEndpoint").val();
-		service.supportEmail = $("#supportEmail").val();
-		service.supportChat = $("#supportChat").val();
-		
-		$.ajax({
-			  type: "POST",
-			  url: _this.appRoot + "/service/update.ctl",
-			  contentType: "application/json",
-			  dataType: "json",
-			  data: JSON.stringify(service),			  
-			  success: function(data) { 
- 
-			  },
-			  error: function(err, err2) {
-
-			  },			  
-			  complete: function() { 
- 
-			  }
-		});
-	};*/
+	this.addPayloadParameter = function() {
+		var extraParam = $(".payloadParameter").first().clone();
+		$(extraParam).find(".addPayloadParameter").remove();
+		$("#payloadParameters").append(extraParam);		
+	};
 
 }

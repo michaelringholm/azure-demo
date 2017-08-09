@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.stelinno.uddi.entities.Service;
 import com.stelinno.uddi.json.HttpHelper;
+import com.stelinno.uddi.models.ServiceModel;
 
 @RestController
 @RequestMapping("/service")
@@ -58,7 +59,7 @@ public class UDDIController {
   
   @RequestMapping(value="/upsert", method=RequestMethod.POST)
   public ResponseEntity<String> upsert(@RequestBody Service service) throws Exception {
-	  if(service != null && service.id != 0)
+	  if(service != null && service.getId() != 0)
 		  return update(service);
 	  else
 		  return insert(service);
@@ -92,7 +93,7 @@ public class UDDIController {
   public ResponseEntity<String> searchById(@RequestBody Service service) {
 	  System.out.println("Calling remote find service in the Cloud...");
 	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
-	  HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(service.id), baseUDDIServiceUrl + "/searchById.ctl");
+	  HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(service.getId()), baseUDDIServiceUrl + "/searchById.ctl");
 	  
 	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
@@ -104,10 +105,10 @@ public class UDDIController {
   }
   
   @RequestMapping(value="/test", method=RequestMethod.POST)
-  public ResponseEntity<String> test(@RequestBody Service service) {
+  public ResponseEntity<String> test(@RequestBody ServiceModel serviceModel) {
 	  System.out.println("Calling remote endpoint in the Cloud...");
 	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
-	  HttpResponse rawResponse = httpHelper.get("licensePlateNo", "bj68632", service.endpoint);
+	  HttpResponse rawResponse = httpHelper.get("licensePlateNo", "bj68632", serviceModel.service.getEndpoint());
 	  
 	  String responsePayload = httpHelper.getResponsePayload(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)

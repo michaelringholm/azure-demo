@@ -32,7 +32,7 @@
 	</div>	
 	<div id="content">
 		<h1>Register Service</h1>
-		<div style="position: absolute; top: 14px; left: 220px; font-size:10pt; border: solid 2px;">
+		<div style="position: absolute; top: 14px; left: 220px; font-size:10pt;">
 			<span id="serviceIdSection" style="color: grey; display: none;">{<span id="serviceId"></span>}</span>
 			<span id="newServiceLabel" style="color: green;">NEW!</span>
 		</div>
@@ -112,11 +112,13 @@
 	  	</div>		
 		
 		<div style="display: inline-block;  vertical-align:top; margin-left: 60px; margin-top: 18px;" id="rightContent">
-			<label>Payload:</label>
-			<div style="display:inline-block; color: green; font-weight: bold; margin-left: 100px; border: solid 2px green; cursor: pointer;">+</div>
-			<div class="payloadParam">
-				<input style="display:inline-block; width: 120px;" type="text" placeholder="Param Name">
-				<input style="display:inline-block; width: 120px; margin-left: 20px;" type="text" placeholder="Param Value">
+			<label>Payload:</label>		
+			<div id="payloadParameters">	
+				<div class="payloadParameter">
+					<input class="paramName" style="display:inline-block; width: 120px;" type="text" placeholder="Param Name">
+					<input class="paramValue" style="display:inline-block; width: 120px; margin-left: 20px;" type="text" placeholder="Param Value">
+					<img class="addPayloadParameter" alt="Add payload parameter" src="../images/plus-icon-32px.png" style="margin-bottom:-10px; cursor: pointer;">
+				</div>
 			</div>
 			<div style="margin-top: 20px;">
 				<label>Output:</label>
