@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.gson.Gson;
 import com.stelinno.uddi.controllers.CustomResponse;
+import com.stelinno.uddi.entities.Payload;
+import com.stelinno.uddi.entities.PayloadParameter;
 import com.stelinno.uddi.entities.Service;
 
 public class HttpHelper {
@@ -39,7 +41,7 @@ public class HttpHelper {
 		return rawResponse;
 	}
 	
-	public HttpResponse get(String parmName, String parmValue, String targetUrl) {
+	public HttpResponse get(Payload payload, String targetUrl) {
 		HttpResponse rawResponse = null;
 		HttpClient httpClient = null;
 		try {
@@ -48,7 +50,10 @@ public class HttpHelper {
 			HttpGet getMethod = new HttpGet(targetUrl);*/
 			
 			URIBuilder builder = new URIBuilder(targetUrl);
-			builder.setParameter(parmName, parmValue);
+			
+			for(PayloadParameter param : payload.getParameters())
+				builder.setParameter(param.getParamName(), param.getParamValue());
+			
 			URI uri = builder.build();
 			HttpGet httpGet = new HttpGet(uri);
 			

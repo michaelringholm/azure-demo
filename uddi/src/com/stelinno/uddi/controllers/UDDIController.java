@@ -1,5 +1,8 @@
 package com.stelinno.uddi.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.stelinno.uddi.entities.Payload;
+import com.stelinno.uddi.entities.PayloadParameter;
 import com.stelinno.uddi.entities.Service;
 import com.stelinno.uddi.json.HttpHelper;
 import com.stelinno.uddi.models.ServiceModel;
@@ -73,7 +78,14 @@ public class UDDIController {
   @RequestMapping(value="/search", method=RequestMethod.POST)
   public ResponseEntity<String> search(@RequestBody String keywords) {
 	  System.out.println("Calling remote find service in the Cloud...");
-	  HttpResponse rawResponse = httpHelper.get("serviceName", keywords.toString(), baseUDDIServiceUrl + "/search.ctl");
+	  Payload payload = new Payload();
+	  List<PayloadParameter> payloadParams = new ArrayList<PayloadParameter>();
+	  PayloadParameter param = new PayloadParameter();
+	  param.setParamName("serviceName");
+	  param.setParamValue(keywords.toString());
+	  payloadParams.add(param);
+	  payload.setParameters(payloadParams);
+	  HttpResponse rawResponse = httpHelper.get(payload, baseUDDIServiceUrl + "/search.ctl");
 	  
 	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
@@ -92,8 +104,14 @@ public class UDDIController {
   @RequestMapping(value="/searchById", method=RequestMethod.POST)
   public ResponseEntity<String> searchById(@RequestBody Service service) {
 	  System.out.println("Calling remote find service in the Cloud...");
-	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
-	  HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(service.getId()), baseUDDIServiceUrl + "/searchById.ctl");
+	  Payload payload = new Payload();
+	  List<PayloadParameter> payloadParams = new ArrayList<PayloadParameter>();
+	  PayloadParameter param = new PayloadParameter();
+	  param.setParamName("serviceId");
+	  param.setParamValue(Long.toString(service.getId()));
+	  payloadParams.add(param);
+	  payload.setParameters(payloadParams);
+	  HttpResponse rawResponse = httpHelper.get(payload, baseUDDIServiceUrl + "/searchById.ctl");
 	  
 	  CustomResponse jsonResponse = httpHelper.getCustomResponse(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)
@@ -108,7 +126,7 @@ public class UDDIController {
   public ResponseEntity<String> test(@RequestBody ServiceModel serviceModel) {
 	  System.out.println("Calling remote endpoint in the Cloud...");
 	  //HttpResponse rawResponse = httpHelper.get("serviceId", Long.toString(serviceId), baseUDDIServiceUrl + "/searchById.ctl");
-	  HttpResponse rawResponse = httpHelper.get("licensePlateNo", "bj68632", serviceModel.service.getEndpoint());
+	  HttpResponse rawResponse = httpHelper.get(serviceModel.service.getPayload(), serviceModel.service.getEndpoint());
 	  
 	  String responsePayload = httpHelper.getResponsePayload(rawResponse);
 	  if(rawResponse.getStatusLine().getStatusCode() != 200)

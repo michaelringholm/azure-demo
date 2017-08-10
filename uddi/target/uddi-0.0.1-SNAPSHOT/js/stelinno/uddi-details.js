@@ -180,8 +180,8 @@ function ServiceFacade() {
 			  data: JSON.stringify(serviceModel),
 			  success: function(responseData) {
 				  $("#feedback").css("color", "green");
-				  $("#feedback").html("Test OK!");
-				  $("#testOutput").val(responseData);
+				  $("#feedback").html(responseData.message);
+				  $("#testOutput").text(responseData);
 				  //$("#newServiceLabel").hide();
 				  //$("#serviceIdSection").show();
 			  },

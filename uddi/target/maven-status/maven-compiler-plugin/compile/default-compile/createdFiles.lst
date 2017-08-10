@@ -1,0 +1,5 @@
+com\stelinno\uddi\models\ServiceModel.class
+com\stelinno\uddi\controllers\UDDIController.class
+com\stelinno\uddi\controllers\CustomResponse.class
+com\stelinno\uddi\config\AppConfig.class
+com\stelinno\uddi\json\HttpHelper.class
