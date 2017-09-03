@@ -16,7 +16,12 @@
 
 package com.stelinno.microservice.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,8 +32,25 @@ public class StockPriceController {
   }
   
   @RequestMapping("/stocks")
-  public String stocks() {
-    return "{ homeTeam:Brøndby, awayTeam:FCK, score:3-1 }";
+  public @ResponseBody List<Stock> stocks() {
+    List<Stock> stocks = new ArrayList<>();
+    Stock stock = new Stock();
+    stock.setExchange("NYSE");
+    stock.setName("American Micro Devices");
+    stock.setSymbol("NASDAQ:AMD");
+    stock.setQuotePrice(13.95);
+    stock.setQuoteTime(new Date());        
+    stocks.add(stock);
+    
+    stock = new Stock();
+    stock.setExchange("NYSE");
+    stock.setName("Intel");
+    stock.setSymbol("NASDAQ:INTC");
+    stock.setQuotePrice(34.45);
+    stock.setQuoteTime(new Date());        
+    stocks.add(stock);    
+    
+    return stocks;
   }
 
   /**
@@ -39,6 +61,11 @@ public class StockPriceController {
   public String healthy() {
     // Message body required though ignored
     return "Still surviving.";
+  }
+  
+  @RequestMapping("/version")
+  public String version() {
+    return "V1.0.14102017_1550";
   }
 
 }

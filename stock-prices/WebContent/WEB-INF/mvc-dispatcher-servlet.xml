@@ -15,15 +15,6 @@
  			string /WEB-INF/jsp/  and suffix .jsp to the view in ModelAndView. 
  			Note that in our CrunchifyHelloWorld class, we have return a ModelAndView object 
  			with view name welcome. This will be resolved to path /WEB-INF/jsp/welcome.jsp . -->
- 			
-	<!--  <bean name="/help" class="com.stelinno.microservice.controller.HelpController" />-->
-
-	<!-- <bean id="viewResolver"	class="org.springframework.web.servlet.view.UrlBasedViewResolver">  -->
-	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<!-- <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" /> -->
-		<property name="prefix" value="/WEB-INF/jsp/" />
- 		<property name="suffix" value=".jsp" />
-	</bean>
 	
 	<mvc:annotation-driven />
  
